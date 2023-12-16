@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const ManagerDashboard = () => {
-    const { products, fetchProducts, deleteProduct, fetchSingleProducts } = useProduct();
+    const { products, fetchProducts, deleteProduct } = useProduct();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
     const [selectedProductId, setSelectedProductId] = useState(null);
@@ -16,7 +16,6 @@ const ManagerDashboard = () => {
 
 
     const openModal = () => {
-        console.log("Hiiiii")
         setIsModalOpen(true);
     };
 
@@ -62,6 +61,11 @@ const ManagerDashboard = () => {
                             className="px-5 py-2 text-white rounded-full bg-blue-600"
                             onClick={openModal}
                         >Add Product</button>
+
+<button
+                            className="px-5 py-2 text-white rounded-full bg-blue-600"
+                            onClick={()=>navigate("/managerOrders")}
+                        >Orders</button>
 
                     </div>
                     <label htmlFor="table-search" className="sr-only">Search</label>

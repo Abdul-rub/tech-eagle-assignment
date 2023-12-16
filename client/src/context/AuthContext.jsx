@@ -38,6 +38,8 @@ const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('token', token);
     localStorage.setItem('role', role);
+    localStorage.setItem('isAuthenticated', true);
+
     
 
   };

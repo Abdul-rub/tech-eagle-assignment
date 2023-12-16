@@ -1,10 +1,11 @@
 
-import { createContext, useContext,  useReducer } from 'react';
+import { createContext, useContext, useReducer } from 'react';
 import { BASE_URL } from '../App';
 
 
 const initialState = {
   products: [],
+  allOders: []
 };
 
 
@@ -19,6 +20,19 @@ const ProductProvider = ({ children }) => {
       case 'FETCH_PRODUCTS':
         return { ...state, products: action.payload };
 
+      case 'FETCH_ALL_ORDERS':
+        return { ...state, allOders: action.payload };
+
+      case 'UPDATE_ORDER_STATUS':
+        return {
+          ...state,
+          allOders: state.allOders.map((order) =>
+            order._id === action.payload.orderId
+              ? { ...order, status: action.payload.status }
+              : order
+          ),
+        };
+
       default:
         return state;
     }
@@ -30,7 +44,7 @@ const ProductProvider = ({ children }) => {
   //FETCH ALL
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/manager/getproducts`,{
+      const response = await fetch(`${BASE_URL}/manager/getproducts`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +55,7 @@ const ProductProvider = ({ children }) => {
         throw new Error(`Failed to fetch products: ${response.status}`);
       }
       const products = await response.json();
-    //   console.log(products, "PRODUCTS")
+      //   console.log(products, "PRODUCTS")
       dispatch({ type: 'FETCH_PRODUCTS', payload: products });
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -65,12 +79,12 @@ const ProductProvider = ({ children }) => {
         throw new Error(`Failed to fetch product: ${response.status}`);
       }
       const product = await response.json();
-      return product;  
+      return product;
     } catch (error) {
       console.error('Error fetching product:', error);
     }
   };
-  
+
 
   const addProduct = async (name, image, description, weight, quantity, price) => {
     // console.log(name, image, description, weight, quantity, price, "PRODUCTS ADDED");
@@ -90,17 +104,17 @@ const ProductProvider = ({ children }) => {
           price,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Failed to add product: ${response.status}`);
       }
-  
+
       fetchProducts();
     } catch (error) {
       console.error('Error adding product:', error);
     }
   };
-  
+
 
   const updateProductQuantity = async (productId, newQuantity) => {
     try {
@@ -145,8 +159,68 @@ const ProductProvider = ({ children }) => {
     }
   };
 
+
+  //FETCH ALL ORDERS
+  const fetchAllOrders = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/manager/orders/all`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch user orders: ${response.status}`);
+      }
+
+      const allOrders = await response.json(); // Corrected the variable name
+      console.log(allOrders, "All ODERSSSS");
+      dispatch({ type: 'FETCH_ALL_ORDERS', payload: allOrders }); // Corrected the type
+    } catch (error) {
+      console.error('Error fetching user orders:', error);
+    }
+  };
+
+  // Update order status
+  const updateOrderStatus = async (orderId, status) => {
+    try {
+      const response = await fetch(`${BASE_URL}/manager/orders/updateStatus`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update order status: ${response.status}`);
+      }
+
+      dispatch({
+        type: 'UPDATE_ORDER_STATUS',
+        payload: { orderId, status },
+      });
+    } catch (error) {
+      console.error('Error updating order status:', error);
+    }
+  };
+
+
   return (
-    <ProductContext.Provider value={{ products: state.products, fetchProducts,fetchSingleProduct, addProduct, updateProductQuantity, deleteProduct }}>
+    <ProductContext.Provider value={{
+      products: state.products,
+      allOders: state.allOders,
+      fetchProducts,
+      fetchSingleProduct,
+      addProduct,
+      updateProductQuantity,
+      deleteProduct,
+      fetchAllOrders ,
+      updateOrderStatus
+    }}>
       {children}
     </ProductContext.Provider>
   );

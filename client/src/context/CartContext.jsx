@@ -65,7 +65,6 @@ const CartProvider = ({ children }) => {
 
 
 
-
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
 
@@ -182,13 +181,36 @@ const CartProvider = ({ children }) => {
         }
   
         const userOrders = await response.json();
-        console.log(userOrders)
+        // console.log(userOrders, "USERS ODERSSSS")
         dispatch({ type: 'FETCH_USER_ORDERS', payload: userOrders });
       } catch (error) {
         console.error('Error fetching user orders:', error);
       }
     };
   
+    //FETCH ALL ORDERS
+    const fetchAllOrders = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/customer/orders`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ userId }),
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Failed to fetch user orders: ${response.status}`);
+        }
+  
+        const userOrders = await response.json();
+        // console.log(userOrders, "USERS ODERSSSS")
+        dispatch({ type: 'FETCH_USER_ORDERS', payload: userOrders });
+      } catch (error) {
+        console.error('Error fetching user orders:', error);
+      }
+    };
 
   // CLEAR CART
   const clearCart = () => {
@@ -196,11 +218,12 @@ const CartProvider = ({ children }) => {
   };
 
 
+  console.log(state.userOrders, "USER ORDERSS")
 
 
 
   return (
-    <CartContext.Provider value={{ cart: state.cart, totalPrice: state.totalPrice, addToCart, updateCartItem, clearCart, getCartData,placeOrder,fetchUserOrders }}>
+    <CartContext.Provider value={{ cart: state.cart, totalPrice: state.totalPrice, userOrder: state.userOrders, addToCart, updateCartItem, clearCart, getCartData,placeOrder,fetchUserOrders }}>
       {children}
     </CartContext.Provider>
   );

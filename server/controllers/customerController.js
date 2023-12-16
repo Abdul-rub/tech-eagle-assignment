@@ -111,6 +111,8 @@ exports.placeOrder = async (req, res) => {
       quantity: item.quantity 
     }));
 
+    let orderTotal = 0;
+
     for (const item of orderedProducts) {
       const product = await Product.findById(item.productId);
 
@@ -120,11 +122,16 @@ exports.placeOrder = async (req, res) => {
 
       product.quantity -= item.quantity;
       await product.save();
+
+
+      const productTotal = item.quantity * product.price;
+      orderTotal += productTotal;
     }
 
     const order = new Order({
       customerId: userId,
       products: orderedProducts,
+      total: orderTotal, 
     });
 
     await order.save();

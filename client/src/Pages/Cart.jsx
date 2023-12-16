@@ -23,7 +23,7 @@ const Cart = () => {
   }, []);
 
 
-  console.log(cart, "CART")
+  console.log(cart.length, "CART")
 
   const handleCheckout=()=>{
     placeOrder()

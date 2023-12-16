@@ -36,7 +36,7 @@ console.log(inventory)
 
 
   return (
-    <div className=' w-full p-10 border-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 border-rose-600'>
+    <div className=' w-full p-10 border-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8'>
       {inventory.map((product) => (
         <Card key={product._id} product={product} />
       ))}

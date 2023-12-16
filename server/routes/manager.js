@@ -12,8 +12,9 @@ router.post('/addProduct', managerController.addProduct);
 router.put('/updateProductQuantity', managerController.updateProductQuantity);
 router.delete('/deleteProduct', managerController.deleteProduct);
 router.post('/placeOrder', managerController.placeOrder);
-router.put('/updateOrderStatus/:orderId', managerController.updateOrderStatus);
+router.put('/orders/updateStatus', managerController.updateOrderStatus);
 router.post('/singleProduct', managerController.getSingleProduct);
+router.get('/orders/all', managerController.getAllUsersOrders);
 
 
 module.exports = router;
