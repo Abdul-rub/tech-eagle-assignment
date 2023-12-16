@@ -185,6 +185,7 @@ const ProductProvider = ({ children }) => {
 
   // Update order status
   const updateOrderStatus = async (orderId, status) => {
+    console.log(orderId, status , "FROM ORDS")
     try {
       const response = await fetch(`${BASE_URL}/manager/orders/updateStatus`, {
         method: 'PUT',
@@ -192,7 +193,7 @@ const ProductProvider = ({ children }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({orderId,status }),
       });
 
       if (!response.ok) {

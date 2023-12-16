@@ -18,9 +18,9 @@ const ManagerOrders = () => {
 
 
 
-    const handleUpdateStatus = async (orderId, newStatus) => {
+    const handleUpdateStatus = async (orderId, status) => {
         try {
-          await updateOrderStatus(orderId, newStatus);
+          await updateOrderStatus(orderId, status);
           fetchAllOrders();
         } catch (error) {
           console.error('Error updating order status:', error);
